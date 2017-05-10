@@ -1,0 +1,17 @@
+{
+    "name": "uphp/mongodb",
+    "description": "Este pacote serve para adicionar conexao ao mongodb no uphp",
+    "authors": [ 
+        {
+            "name": "Diego Bentes",
+            "email": "diegopbentes@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",    
+    "require": {
+         "php": ">=7.0.0"         
+    },    
+    "autoload": {
+        "files": ["src/Database.php"]
+    }
+ }
