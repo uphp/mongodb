@@ -1,8 +1,17 @@
 <?php
     namespace test;
     require("../vendor/autoload.php");
-
     use src\Database;
+    
+    class Pessoa extends Database{
+        public $_id;
+        public $nome;
+
+        public static function teste(){
+            $className = explode("\\",__CLASS__);
+            echo end($className);
+        }
+    }
 
     $db = array(
 		"server" => "172.25.1.12",
@@ -12,15 +21,39 @@
 		"dbname" => "local"		
 	);
 
-    $mongo = new Database();    
-    $mongo->connect($db);
+    $pessoa = new Pessoa();
+    $pessoa->connect($db);
+    $pessoa->collection = "teste_diego";
+    //$pessoa->_id = 23010220;
+    $pessoa->nome = "Diego Bentes";
+
+    //Pessoa::teste();
+?>
     
-    //$mongo->collection = "enderecos";
-    //$one = $mongo->findOne(["nome_logradouro" => "Sacramento Blacke"]);
-    //$one = $mongo->findAll(["_id" => 23010220]);
+    <!-- html>
+    <head><title>Roteiro de Teste</title></head>
+    <body>
+        <table>
+            <tr>
+                <td>Descrição</td>
+                <td>Função</td>
+                <td>Resultado</td>
+            </tr>
+            <tr -->
+
+<?php
+    //echo "<td>Criar nova pessoa</td>";
+    //echo "<td>save();</td>";
+
+    $obj_pessoa = $pessoa->save();
+    var_dump($obj_pessoa);
+    echo $obj_pessoa->delete();
+    //echo $obj_pessoa->objectToArray();
+
     
-    //$mongo->collection = "teste_diego";
-    //$one = $mongo->insert(["_id" => 23010220]);
     
-    var_dump($one);
-    
+?>
+            </tr>
+        </table>
+    </body>
+</html>

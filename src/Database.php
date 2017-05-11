@@ -38,6 +38,42 @@
             //endif;
         }
 
+        /*public function __toString()
+        {
+            return get_class($this);
+        }*/
+
+        /* RETORNA AS PROPRIEDADES(ATRIBUTOS) DE UMA CLASSE, SE $ALL FOR VERDADEIRO, É INCLUSO AS PROPRIEDADES DA CLASSE PAI */
+        function getClassVars($all = FALSE)
+        {
+            if($all){
+                $retu = array_keys(get_class_vars(get_class($this)));
+            }else{
+                $obj_array = array_keys(get_class_vars(get_class($this)));
+                $database_array = array_keys(get_class_vars(get_class(new Database())));
+                $retu = array_diff($obj_array, $database_array);
+            }
+            return $retu;
+        }
+
+        /* CONVERTE UM OBJETO PARA ARRAY */
+        public function objectToArray(){
+            $collection_values = [];
+            foreach($this->getClassVars() as $field){
+                if($this->$field != NULL){
+                    $collection_values[$field] = $this->$field;
+                }
+            }
+            return $collection_values;
+        }
+
+        /* ADICIONA AO OBJETO INSTANCIADO OS VALORES DO ARRAY RETORNADO */
+        function addArrayToObject($array){
+            foreach($array as $key => $value){
+                $this->$key = $value;
+            }
+        }
+
         public function connectMongo(){
             $this->connection = new MongoManager('mongodb://'.$this->server_addr.':'.$this->port) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
             //$this->database = $this->connection->selectDB($this->name_db) or die(error_database(__FILE__, __FUNCTION__, "Não foi possível se conectar ao Banco de Dados selecionado."));
@@ -54,30 +90,50 @@
         }
 
         /* Manipulation functions */
-        //padrao novo
-        public function insert($object){
+        //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
+        public function save(){
             $bulk = new MongoBulkWrite();
-            $bulk->insert($object);
+            $objArray = $this->objectToArray();
+            $mongo_id = $bulk->insert($objArray);
             $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
+            return $this->findOneReturn(["_id" => $mongo_id]);
         }
+
         public function update($object, $query){
             $this->database->selectCollection($this->collection)->update($query, $object);
         }
-        public function delete($object){
-            $this->database->selectCollection($this->collection)->remove($objeto);
+
+        //PADRAO NOVO -- TODO
+        public function delete(){
+            $bulk = new MongoBulkWrite();
+            $bulk->delete(["_id" => $this->_id]);
+            $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
         }
-        //padrao novo
+
+        //padrao novo -- TODO
         public function findAll($filter=NULL){
             $query = new MongoQuery($filter == NULL ? [] : $filter);
             $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
             return $cursor->toArray();        
         }
-        //padrao novo
-        public function findOne($filter){
-            $query = new MongoQuery($filter);
-            $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
+        
+        //PADRAO NOVO -- TODO
+        public static function findOne($filter){
+            $query = new MongoQuery($filter);            
+            $classArray = explode("\\",__CLASS__);
+            $className = end($classArray);
+            $instance = new $className();
+            $cursor = $this->connection->executeQuery($instance->name_db.'.'.$instance->collection, $query);
             return $cursor->toArray()[0];
         }
+
+        public function findOneReturn($filter){
+            $query = new MongoQuery($filter);
+            $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
+            $this->addArrayToObject((array)$cursor->toArray()[0]);
+            return $this;
+        }
+
         public function getMongoID($id){
             $mongoId = new MongoId($id);
             return $mongoId;
