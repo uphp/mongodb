@@ -9,7 +9,8 @@
     ],
     "minimum-stability": "dev",    
     "require": {
-         "php": ">=7.0.0"         
+         "php": ">=7.0.0",
+         "uphp/inflection": "dev-master"         
     },    
     "autoload": {
         "files": ["src/Database.php"]

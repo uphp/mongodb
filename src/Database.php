@@ -5,6 +5,8 @@
     use MongoDB\Driver\Query as MongoQuery;
     use MongoDB\Driver\BulkWrite as MongoBulkWrite;
 
+    use Inflection as Inflect;
+
     class Database{
 
         public $server_addr     = "";
@@ -22,19 +24,16 @@
         public $pkfield = NULL;
         public $pkvalue = NULL;
         public $extra_options = "";
+        public $forupdate = FALSE;
 
-        public function __construct(/*$db*/){
-        	/*$this->server_addr  = $db["server"];
-        	$this->user_db 	    = $db["user"];
-        	$this->pass_db 	    = $db["password"];
-        	$this->name_db      = $db["dbname"];
-            $this->port         = $db["port"];
-            $this->connectMongo();*/
+        public function __construct(){
+            $var = require("connection.php");
+            $this->connect($var);
         }
 
         public function __destruct(){
             //if($this->connection != NULL):
-                //$this->connection->close();
+            //    $this->connection->close();
             //endif;
         }
 
@@ -44,7 +43,7 @@
         }*/
 
         /* RETORNA AS PROPRIEDADES(ATRIBUTOS) DE UMA CLASSE, SE $ALL FOR VERDADEIRO, É INCLUSO AS PROPRIEDADES DA CLASSE PAI */
-        function getClassVars($all = FALSE)
+        private function getClassVars($all = FALSE)
         {
             if($all){
                 $retu = array_keys(get_class_vars(get_class($this)));
@@ -57,7 +56,7 @@
         }
 
         /* CONVERTE UM OBJETO PARA ARRAY */
-        public function objectToArray(){
+        private  function objectToArray(){
             $collection_values = [];
             foreach($this->getClassVars() as $field){
                 if($this->$field != NULL){
@@ -68,11 +67,22 @@
         }
 
         /* ADICIONA AO OBJETO INSTANCIADO OS VALORES DO ARRAY RETORNADO */
-        function addArrayToObject($array){
+        private function addArrayToObject($array){
             foreach($array as $key => $value){
                 $this->$key = $value;
             }
         }
+
+        //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
+        private function findOneReturn($filter, $forUpdate = FALSE){
+            $query = new MongoQuery($filter);
+            $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
+            $this->addArrayToObject((array)$cursor->toArray()[0]);
+            $this->forupdate = $forUpdate;
+            return $this;
+        }
+
+        /*******************************************************/
 
         public function connectMongo(){
             $this->connection = new MongoManager('mongodb://'.$this->server_addr.':'.$this->port) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
@@ -89,32 +99,52 @@
                           <strong><Mensagem:</strong> '.$msgerror;
         }
 
-        /* Manipulation functions */
+        /* Manipulation functions ************************************************/
         //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
         public function save(){
+            if($this->forupdate){
+                return $this->update();
+            }else{
+                $bulk = new MongoBulkWrite();
+                $objArray = $this->objectToArray();
+                $mongo_id = $bulk->insert($objArray);
+                $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
+                return $this->findOneReturn(["_id" => $mongo_id], TRUE);
+            }
+        }
+
+        //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
+        public function update(){
             $bulk = new MongoBulkWrite();
             $objArray = $this->objectToArray();
-            $mongo_id = $bulk->insert($objArray);
+            $bulk->update(["_id" => $this->_id], $objArray);
             $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
-            return $this->findOneReturn(["_id" => $mongo_id]);
+            return $this;
         }
 
-        public function update($object, $query){
-            $this->database->selectCollection($this->collection)->update($query, $object);
-        }
-
-        //PADRAO NOVO -- TODO
+        //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
         public function delete(){
             $bulk = new MongoBulkWrite();
             $bulk->delete(["_id" => $this->_id]);
             $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
+            return $this;
         }
 
         //padrao novo -- TODO
-        public function findAll($filter=NULL){
+        public static function findAll($filter=NULL){
             $query = new MongoQuery($filter == NULL ? [] : $filter);
-            $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
-            return $cursor->toArray();        
+            
+            $instance = new self();
+
+            $classArray = explode("\\",__CLASS__);
+            $className = end($classArray);
+            $instance->collection != "" ? $collectionName = $instance->collection : $collectionName = Inflect::pluralize($className);
+
+            
+
+            $cursor = $instance->connection->executeQuery($this->name_db.'.'.$collectionName, $query);
+
+            return $cursor->toArray()[0];        
         }
         
         //PADRAO NOVO -- TODO
@@ -127,12 +157,7 @@
             return $cursor->toArray()[0];
         }
 
-        public function findOneReturn($filter){
-            $query = new MongoQuery($filter);
-            $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
-            $this->addArrayToObject((array)$cursor->toArray()[0]);
-            return $this;
-        }
+        
 
         public function getMongoID($id){
             $mongoId = new MongoId($id);
