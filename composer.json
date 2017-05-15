@@ -7,10 +7,9 @@
             "email": "diegopbentes@gmail.com"
         }
     ],
-    "minimum-stability": "dev",    
     "require": {
          "php": ">=7.0.0",
-         "uphp/inflection": "dev-master"         
+        "uphp/inflection": "^1.0"         
     },    
     "autoload": {
         "files": ["src/Database.php"]
