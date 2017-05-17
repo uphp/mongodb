@@ -18,11 +18,17 @@
             if(get_called_class() == "test\Pessoa" and $this->nome == "Bentes, Diego" and $this->_id != NULL){
                 echo "<span color='green'>OK</span>";
              }else{
-                echo "<span color='red'>ERROR</span>";
+                echo "<span color='red'><strong>ERROR</strong><br>Class: ".get_called_class()."<br>Nome: ".$this->nome."<br>".$this->_id."</span>";
              }
         }
         public function testFindOne(){
             $this->testUpdate();
+        }
+        public function testFind(){
+            $this->testUpdate();
+        }
+        public function testCreate(){
+            $this->testFindOne();
         }
         public static function testFindAll($object_array){
             if(count($object_array) >= 2){
@@ -47,12 +53,18 @@
                 echo "<span color='red'>ERROR</span>";
             }
         }
+        public static function testAll($object_array){
+            self::testFindAll($object_array);
+        }
     }
 
     //save
     $pessoa = new Pessoa();
     $pessoa->nome = "Diego Bentes";
     $pessoa_save = $pessoa->save();
+
+    //save
+    $pessoa_create = Pessoa::create(["nome" => "Bentes, Diego"]);
 
     //update
     $pessoa = Pessoa::findOne(["_id" => $pessoa->_id]);
@@ -62,17 +74,32 @@
     //findOne
     $pessoa_findOne = Pessoa::findOne(["_id" => $pessoa->_id]);
 
+    //find
+    $pessoa_find = Pessoa::find($pessoa->_id);
+
     //findAll
     $pessoa = new Pessoa();
     $pessoa->nome = "Diego Bentes";
     $pessoa_save = $pessoa->save();
     $pessoas = Pessoa::findAll();
 
+    //all
+    $pessoas_all = Pessoa::all();
+
+    //first - ADD IN TABLE TEST
+    $pessoa_first = Pessoa::first();
+    //var_dump($pessoa_first);
+
+    //last - ADD IN TABLE TEST
+    $pessoa_last = Pessoa::last();
+
     //delete
     foreach($pessoas as $pessoa){
         $pessoa->delete();
     }
     $pessoas_delete = Pessoa::findAll();
+
+    
 ?>
 
 <!DOCTYPE html>
@@ -148,19 +175,44 @@
                     <td><?php $pessoa_save->testSave() ?></td>
                 </tr>
                 <tr>
+                    <td>Cria um novo documento</td>
+                    <td>::create(Array $object_array)</td>
+                    <td><?php $pessoa_create->testCreate() ?></td>
+                </tr>
+                <tr>
                     <td>Atualiza um documento</td>
                     <td>.update()</td>
                     <td><?php $pessoa_update->testUpdate() ?></td>
                 </tr>
                 <tr>
                     <td>Busca um único documento</td>
-                    <td>::findOne()</td>
+                    <td>::findOne($filter)</td>
                     <td><?php $pessoa_findOne->testFindOne() ?></td>
                 </tr>
                 <tr>
+                    <td>Busca um único documento</td>
+                    <td>::find($id)</td>
+                    <td><?php $pessoa_find->testFind() ?></td>
+                </tr>
+                <tr>
                     <td>Busca todos os documentos</td>
-                    <td>::findAll()</td>
+                    <td>::findAll($filter=NULL)</td>
                     <td><?php Pessoa::testFindAll($pessoas) ?></td>
+                </tr>
+                <tr>
+                    <td>Busca todos os documentos</td>
+                    <td>::all()</td>
+                    <td><?php Pessoa::testAll($pessoas_all) ?></td>
+                </tr>
+                <tr>
+                    <td>Busca o primeiro documento</td>
+                    <td>::first()</td>
+                    <td><?php  ?></td>
+                </tr>
+                <tr>
+                    <td>Busca o último documento</td>
+                    <td>::last()</td>
+                    <td><?php  ?></td>
                 </tr>
                 <tr>
                     <td>Exclui um documento</td>
