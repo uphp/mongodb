@@ -186,7 +186,7 @@
                 </tr>
                 <tr>
                     <td>Busca um único documento</td>
-                    <td>::findOne($filter)</td>
+                    <td>::findOne(Array $filter)</td>
                     <td><?php $pessoa_findOne->testFindOne() ?></td>
                 </tr>
                 <tr>
@@ -196,7 +196,7 @@
                 </tr>
                 <tr>
                     <td>Busca todos os documentos</td>
-                    <td>::findAll($filter=NULL)</td>
+                    <td>::findAll(Array $filter=[])</td>
                     <td><?php Pessoa::testFindAll($pessoas) ?></td>
                 </tr>
                 <tr>

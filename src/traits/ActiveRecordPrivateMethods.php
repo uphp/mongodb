@@ -57,7 +57,7 @@
             }
             return $object_list;
         }
-        //RETORNA UMA INSTANCIA DO OBJETO DO TIPO DA CLASSE CHAMADA
+        // RETORNA UMA INSTANCIA DO OBJETO DO TIPO DA CLASSE CHAMADA
         private static function newInstanceToCallClass()
         {
             $instance_class = get_called_class();
