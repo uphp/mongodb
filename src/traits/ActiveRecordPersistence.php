@@ -13,7 +13,8 @@
 
         /* BEGIN Manipulation Functions ************************************************/
         //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
-        public function save(){
+        public function save()
+        {
             if($this->forupdate){
                 return $this->update();
             }else{
@@ -25,7 +26,8 @@
             }
         }
         //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
-        public function update(){
+        public function update()
+        {
             $bulk = new MongoBulkWrite();
             $objArray = $this->objectToArray();
             $bulk->update(["_id" => $this->_id], $objArray);
@@ -33,13 +35,15 @@
             return $this;
         }
         //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
-        public function delete(){
+        public function delete()
+        {
             $bulk = new MongoBulkWrite();
             $bulk->delete(["_id" => $this->_id]);
             $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
             return $this;
         }
-        public static function create(Array $object_array){
+        public static function create(Array $object_array)
+        {
             $instance = self::newInstanceToCallClass();
             $instance->addArrayToObject($object_array);
             return $instance->save();

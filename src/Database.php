@@ -15,7 +15,8 @@
         use \src\traits\ActiveRecordPersistence;
         use \src\traits\ActiveRecordFinderMethods;                
 
-        public function __construct(){
+        public function __construct() 
+        {
             $var = require("connection.php");
             $this->connect($var);
 
@@ -25,11 +26,13 @@
             $this->collection = Inflection::pluralize($className);
         }
 
-        public function __get($name) {
+        public function __get($name)
+        {
             throw new Exception("Property $name cannot be read");
         }
 
-        public function __set($name, $value) {
+        public function __set($name, $value)
+        {
             throw new Exception("Property $name cannot be set");
         }
     }
