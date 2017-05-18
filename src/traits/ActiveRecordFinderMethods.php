@@ -14,14 +14,14 @@
             return self::findOne(["_id" => $id]);
         }
         //PADRAO NOVO COM RETORNO DE VÁRIOS OBJETOS DO TIPO INSTANCIADO
-        public static function findAll($filter=NULL){
-            $query = new MongoQuery($filter == NULL ? [] : $filter);            
+        public static function findAll(Array $filter = []){
+            $query = new MongoQuery($filter == [] ? [] : $filter);            
             $instance = self::newInstanceToCallClass();
             $cursor = $instance->connection->executeQuery($instance->name_db.'.'.$instance->collection, $query);
             return $instance->cursorToObject($cursor);
         }
         //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
-        public static function findOne($filter){
+        public static function findOne(Array $filter){
             $query = new MongoQuery($filter);            
             $instance = self::newInstanceToCallClass();
             $cursor = $instance->connection->executeQuery($instance->name_db.'.'.$instance->collection, $query);

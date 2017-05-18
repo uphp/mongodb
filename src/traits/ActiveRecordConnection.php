@@ -16,7 +16,7 @@
             $this->connection = new MongoManager('mongodb://'.$this->server_addr.':'.$this->port) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
         }
 
-        public function error_database($file=NULL, $func=NULL, $msgerror=NULL){
+        public function errorDatabase($file=NULL, $func=NULL, $msgerror=NULL){
             if($arquivo == NULL) $file = "Não informado";
             if($rotina == NULL) $func = "Não informada";
             if($msgerro == NULL) $msgerror = "Não informada";
