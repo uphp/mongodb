@@ -29,7 +29,14 @@
             $query = new MongoQuery($filter);            
             $instance = self::newInstanceToCallClass();
             $cursor = $instance->connection->executeQuery($instance->name_db.'.'.$instance->collection, $query);
-            return $instance->cursorToObject($cursor)[0];
+            $objects = $instance->cursorToObject($cursor);
+            if(count($objects) > 0)
+            {
+                return $objects[0];
+            }else{
+                return FALSE;
+            }
+            
         }
         //RETORNO DO PRIMEIRO REGISTRO DA COLECAO
         public static function first()

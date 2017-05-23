@@ -10,7 +10,6 @@
         private $pass_db         = "";
         private $name_db         = "";
         private $port            = "";
-        private $pk_field        = "_id";
 
         public function connectMongo()
         {

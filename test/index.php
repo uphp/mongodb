@@ -1,105 +1,8 @@
 <?php
     namespace test;
     require("../vendor/autoload.php");
-    use src\Database;
-    
-    class Pessoa extends Database{
-        public $_id = NULL;
-        public $nome = NULL;
-
-        public function testSave(){
-            if(get_called_class() == "test\Pessoa" and $this->nome == "Diego Bentes" and $this->_id != NULL){
-                echo "<span color='green'>OK</span>";
-             }else{
-                echo "<span color='red'><strong>ERROR</strong><br>Class: ".get_called_class()."<br>Nome: ".$this->nome."<br>".$this->_id."</span>";
-             }
-        }
-        public function testUpdate(){
-            if(get_called_class() == "test\Pessoa" and $this->nome == "Bentes, Diego" and $this->_id != NULL){
-                echo "<span color='green'>OK</span>";
-             }else{
-                echo "<span color='red'><strong>ERROR</strong><br>Class: ".get_called_class()."<br>Nome: ".$this->nome."<br>".$this->_id."</span>";
-             }
-        }
-        public function testFindOne(){
-            $this->testUpdate();
-        }
-        public function testFind(){
-            $this->testUpdate();
-        }
-        public function testCreate(){
-            $this->testFindOne();
-        }
-        public static function testFindAll($object_array){
-            if(count($object_array) >= 2){
-                foreach($object_array as $obj){
-                    if(get_class($obj) == "test\Pessoa"){
-                        continue;
-                    }else{
-                        echo "<span color='red'>ERROR</span>";
-                        $not_ok = true;
-                        break;
-                    }
-                }
-                if(!isset($not_ok)){
-                    echo "<span color='green'>OK</span>";
-                }
-            }
-        }
-        public static function testDelete($object_array){
-            if(count($object_array) == 0){
-                echo "<span color='green'>OK</span>";
-            }else{
-                echo "<span color='red'>ERROR</span>";
-            }
-        }
-        public static function testAll($object_array){
-            self::testFindAll($object_array);
-        }
-    }
-
-    //save
-    $pessoa = new Pessoa();
-    $pessoa->nome = "Diego Bentes";
-    $pessoa_save = $pessoa->save();
-
-    //save
-    $pessoa_create = Pessoa::create(["nome" => "Bentes, Diego"]);
-
-    //update
-    $pessoa = Pessoa::findOne(["_id" => $pessoa->_id]);
-    $pessoa->nome = "Bentes, Diego";
-    $pessoa_update = $pessoa->update();
-
-    //findOne
-    $pessoa_findOne = Pessoa::findOne(["_id" => $pessoa->_id]);
-
-    //find
-    $pessoa_find = Pessoa::find($pessoa->_id);
-
-    //findAll
-    $pessoa = new Pessoa();
-    $pessoa->nome = "Diego Bentes";
-    $pessoa_save = $pessoa->save();
-    $pessoas = Pessoa::findAll();
-
-    //all
-    $pessoas_all = Pessoa::all();
-
-    //first - ADD IN TABLE TEST
-    $pessoa_first = Pessoa::first();
-    //var_dump($pessoa_first);
-
-    //last - ADD IN TABLE TEST
-    $pessoa_last = Pessoa::last();
-
-    //delete
-    foreach($pessoas as $pessoa){
-        $pessoa->delete();
-    }
-    $pessoas_delete = Pessoa::findAll();
-
-    
+    require("classes/TestPessoa.php");
+    require("classes/Pessoa.php");
 ?>
 
 <!DOCTYPE html>
@@ -141,9 +44,9 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">UPhp</a></li>
-            <li role="presentation"><a href="#">Docs</a></li>
-            <li role="presentation"><a href="#">Contact</a></li>
+            <li role="presentation" class="active"><a href="http://uphp.io">UPhp</a></li>
+            <li role="presentation"><a href="http://uphp.io/docs/mongodb">Docs</a></li>
+            <li role="presentation"><a href="http://uphp.io/contacts">Contact</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">Author: Diego Bentes</h3>
@@ -170,54 +73,46 @@
                     <th>Teste</th>
                 </tr>
                 <tr>
-                    <td>Cria um novo documento</td>
-                    <td>.save()</td>
-                    <td><?php $pessoa_save->testSave() ?></td>
+                    <?php include("methodTests/saveForCreate.php"); ?>
                 </tr>
                 <tr>
-                    <td>Cria um novo documento</td>
-                    <td>::create(Array $object_array)</td>
-                    <td><?php $pessoa_create->testCreate() ?></td>
+                    <?php include("methodTests/saveForUpdate.php"); ?>
                 </tr>
                 <tr>
-                    <td>Atualiza um documento</td>
-                    <td>.update()</td>
-                    <td><?php $pessoa_update->testUpdate() ?></td>
+                    <?php include("methodTests/create.php"); ?>
                 </tr>
                 <tr>
-                    <td>Busca um único documento</td>
-                    <td>::findOne(Array $filter)</td>
-                    <td><?php $pessoa_findOne->testFindOne() ?></td>
+                    <?php include("methodTests/update.php"); ?>
                 </tr>
                 <tr>
-                    <td>Busca um único documento</td>
-                    <td>::find($id)</td>
-                    <td><?php $pessoa_find->testFind() ?></td>
+                    <?php include("methodTests/findOne.php"); ?>
                 </tr>
                 <tr>
-                    <td>Busca todos os documentos</td>
-                    <td>::findAll(Array $filter=[])</td>
-                    <td><?php Pessoa::testFindAll($pessoas) ?></td>
+                    <?php include("methodTests/find.php"); ?>
                 </tr>
                 <tr>
-                    <td>Busca todos os documentos</td>
-                    <td>::all()</td>
-                    <td><?php Pessoa::testAll($pessoas_all) ?></td>
+                    <?php include("methodTests/findAll.php"); ?>
                 </tr>
                 <tr>
-                    <td>Busca o primeiro documento</td>
-                    <td>::first()</td>
-                    <td><?php  ?></td>
+                    <?php include("methodTests/all.php"); ?>
                 </tr>
                 <tr>
-                    <td>Busca o último documento</td>
-                    <td>::last()</td>
-                    <td><?php  ?></td>
+                    <?php include("methodTests/first.php"); ?>
                 </tr>
                 <tr>
-                    <td>Exclui um documento</td>
-                    <td>.delete()</td>
-                    <td><?php Pessoa::testDelete($pessoas_delete) ?></td>
+                    <?php include("methodTests/last.php"); ?>
+                </tr>
+                <tr>
+                    <?php include("methodTests/delete.php"); ?>
+                </tr>
+                <tr>
+                    <?php include("methodTests/softDelete.php"); ?>
+                </tr>
+                <tr>
+                    <?php include("methodTests/destroy.php"); ?>
+                </tr>
+                <tr>
+                    <?php include("methodTests/softDestroy.php"); ?>
                 </tr>
             </table>
         </div>

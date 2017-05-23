@@ -13,7 +13,8 @@
             }else{
                 $obj_array = array_keys(get_class_vars(get_class($this)));
                 $database_array = array_keys(get_class_vars(get_class(new self())));
-                $retu = array_diff($obj_array, $database_array);
+                $array_attr = array_diff($obj_array, $database_array);
+                $retu = array_merge($array_attr, ["created_at", "updated_at", "deleted_at"]);
             }
             return $retu;
         }
@@ -56,6 +57,21 @@
                 array_push($object_list, $new_obj);
             }
             return $object_list;
+        }
+        //ADICIONA OS TIMESTAMPS AO OBJETO
+        private function addTimeStamps()
+        {
+            $this->created_at = date('Y-m-d H:i:s');
+            $this->updated_at = date('Y-m-d H:i:s');
+        }
+        //ATUALIZA O TIMESTAMPS DO OBJETO
+        private function updateTimeStamps()
+        {
+            $this->updated_at = date('Y-m-d H:i:s');
+        }
+        //ADICIONA O TIMESTAMPS DELETED_AT
+        private function addTimeStampsDelete(){
+            $this->deleted_at = date("Y-m-d H:i:s");
         }
         // RETORNA UMA INSTANCIA DO OBJETO DO TIPO DA CLASSE CHAMADA
         private static function newInstanceToCallClass()
