@@ -3,7 +3,8 @@
 
     use MongoDB\Driver\Query as MongoQuery;
     use MongoDB\Driver\BulkWrite as MongoBulkWrite;
-    //use src\Inflection as Inflection;
+    use MongoDB\Driver\Manager as MongoManager;
+    use src\Inflection as Inflection;
 
     trait ActiveRecordPersistence{
 
@@ -66,10 +67,15 @@
         }
         public static function deleteAll()
         {
-            //$objects = get_called_class()::all();
-            
+            $className = get_called_class();
+            //var_dump(end(explode("\\", $className)));
+            self::executeCommand(["drop" => Inflection::pluralize(end(explode("\\", $className)))]);
+
         }
-        public static function destroyAll(){}
+        public static function destroyAll()
+        {
+            self::deleteAll();
+        }
         
         //CRIA UM NOVO OBJETO
         public static function create(Array $object_array)

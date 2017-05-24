@@ -2,6 +2,8 @@
     namespace src;
 
     use Exception;
+    use MongoDB\Driver\Manager as MongoManager;
+    use MongoDB\Driver\Command as MongoCommand;
 
     require_once "traits/ActiveRecordConnection.php";
     require_once "traits/ActiveRecordPersistence.php";
@@ -13,7 +15,7 @@
         use \src\traits\ActiveRecordConnection;
         use \src\traits\ActiveRecordPrivateMethods;
         use \src\traits\ActiveRecordPersistence;
-        use \src\traits\ActiveRecordFinderMethods;                
+        use \src\traits\ActiveRecordFinderMethods;
 
         public function __construct() 
         {
@@ -34,5 +36,12 @@
         public function __set($name, $value)
         {
             throw new Exception("Property $name cannot be set");
+        }
+
+        public static function executeCommand($commandStr){
+            $connectionInfo = require("connection.php");            
+            $connect = new MongoManager('mongodb://'.$connectionInfo["server"].':'.$connectionInfo["port"]) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
+            $command = new MongoCommand($commandStr);
+            $connect->executeCommand($connectionInfo["dbname"], $command);
         }
     }

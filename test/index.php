@@ -114,6 +114,9 @@
                 <tr>
                     <?php include("methodTests/softDestroy.php"); ?>
                 </tr>
+                <tr>
+                    <?php include("methodTests/deleteAll.php"); ?>
+                </tr>
             </table>
         </div>
           
