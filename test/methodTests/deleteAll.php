@@ -1,6 +1,8 @@
 <?php
     use test\classes\Pessoa;
-
     Pessoa::deleteAll();
+?>
 
-    echo "teste";
+<td>Exclui todos os documentos</td>
+<td>::deleteAll()</td>
+<td><?php Pessoa::testDeleteAll() ?></td>

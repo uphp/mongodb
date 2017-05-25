@@ -125,4 +125,20 @@
                 echo "<span color='red'><strong>ERROR</strong><br>Class: ".get_called_class()."<br>Nome: ".$object->nome."<br>".$object->_id."</span>";
              }
         }
+        public static function testDeleteAll(){
+            $pessoas = Pessoa::all();
+            if(count($pessoas) == 0){
+                self::ok();
+            }else{
+                echo "<span color='red'><strong>ERROR</strong><br>Class: ".get_called_class();
+            }
+        }
+        public static function testDestroyAll(){
+            $pessoas = Pessoa::all();
+            if(count($pessoas) == 0){
+                self::ok();
+            }else{
+                echo "<span color='red'><strong>ERROR</strong><br>Class: ".get_called_class();
+            }
+        }
     }

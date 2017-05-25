@@ -117,6 +117,9 @@
                 <tr>
                     <?php include("methodTests/deleteAll.php"); ?>
                 </tr>
+                <tr>
+                    <?php include("methodTests/destroyAll.php"); ?>
+                </tr>
             </table>
         </div>
           

@@ -67,16 +67,15 @@
         }
         public static function deleteAll()
         {
-            $className = get_called_class();
-            //var_dump(end(explode("\\", $className)));
-            self::executeCommand(["drop" => Inflection::pluralize(end(explode("\\", $className)))]);
+            $arrClassName = explode("\\", get_called_class());
+            $className = end($arrClassName);
+            self::executeCommand(["drop" => Inflection::pluralize($className)]);
 
         }
         public static function destroyAll()
         {
             self::deleteAll();
         }
-        
         //CRIA UM NOVO OBJETO
         public static function create(Array $object_array)
         {
