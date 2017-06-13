@@ -15,6 +15,8 @@
         "phpunit/phpunit": "6.1.*"
     },    
     "autoload": {
-        "files": ["src/Database.php"]
+        "psr-4": {
+            "UPhp\\Model\\": "src/"
+        }
     }
  }
