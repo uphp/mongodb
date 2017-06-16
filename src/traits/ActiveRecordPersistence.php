@@ -4,6 +4,7 @@
     use MongoDB\Driver\Query as MongoQuery;
     use MongoDB\Driver\BulkWrite as MongoBulkWrite;
     use MongoDB\Driver\Manager as MongoManager;
+    use MongoDB\BSON\ObjectId as MongoId;
     use src\Inflection as Inflection;
 
     trait ActiveRecordPersistence{
@@ -37,6 +38,7 @@
             $bulk = new MongoBulkWrite();
             $this->updateTimeStamps();
             $objArray = $this->objectToArray();
+            //$objectId = new MongoId($this->_id);
             $bulk->update([$this->pk_field => $this->_id], $objArray);
             $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
             return $this;
@@ -53,6 +55,10 @@
         {
             $this->addTimeStampsDelete();
             return $this->update();
+        }
+        public function getMongoId()
+        {
+            return (string) new MongoId($this->_id); 
         }
         public static function destroy($id)
         {
@@ -82,6 +88,14 @@
             $instance = self::newInstanceToCallClass();
             $instance->addArrayToObject($object_array);
             return $instance->save();
+        }
+        //ATUALIZA UM OBJETO
+        public function update_attributes(Array $object_array)
+        {
+            unset($object_array["id"]);
+            $this->addArrayToObject($object_array);
+            $this->forupdate = true;
+            return $this->save();
         }
         /* END Manipulation Functions **************************************************/
 

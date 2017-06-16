@@ -18,7 +18,7 @@
         use \src\traits\ActiveRecordPersistence;
         use \src\traits\ActiveRecordFinderMethods;
 
-        public function __construct() 
+        public function __construct(Array $object_array = []) 
         {
             $var = require("config/database.php");
             $this->connect($var);
@@ -27,6 +27,8 @@
             $classArray = explode("\\",$instance_class);
             $className = end($classArray);
             $this->collection = Inflection::pluralize($className);
+
+            $this->addArrayToObject($object_array);
         }
 
         public function __get($name)

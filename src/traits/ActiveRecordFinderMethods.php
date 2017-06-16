@@ -2,6 +2,7 @@
     namespace src\traits;
 
     use MongoDB\Driver\Query as MongoQuery;
+    use MongoDB\BSON\ObjectId as MongoId;
 
     trait ActiveRecordFinderMethods{
         
@@ -13,6 +14,9 @@
         //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO BUSCANDO PELO ID
         public static function find($id)
         {
+            if (is_string($id) && $id != "") {
+                $id = new MongoId($id);
+            }
             return self::findOne(["_id" => $id]);
         }
         //PADRAO NOVO COM RETORNO DE VÁRIOS OBJETOS DO TIPO INSTANCIADO
@@ -34,7 +38,7 @@
             {
                 return $objects[0];
             }else{
-                return FALSE;
+                return false;
             }
             
         }

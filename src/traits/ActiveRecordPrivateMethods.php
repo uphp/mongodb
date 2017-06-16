@@ -33,6 +33,7 @@
         private function addArrayToObject($array)
         {
             foreach($array as $key => $value){
+                if ($key == "id") $key = "_id";
                 $this->$key = $value;
             }
         }
