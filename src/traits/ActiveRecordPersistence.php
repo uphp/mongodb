@@ -38,7 +38,6 @@
             $bulk = new MongoBulkWrite();
             $this->updateTimeStamps();
             $objArray = $this->objectToArray();
-            //$objectId = new MongoId($this->_id);
             $bulk->update([$this->pk_field => $this->_id], $objArray);
             $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
             return $this;
@@ -92,7 +91,7 @@
         //ATUALIZA UM OBJETO
         public function update_attributes(Array $object_array)
         {
-            unset($object_array["id"]);
+            unset($object_array["_id"]);
             $this->addArrayToObject($object_array);
             $this->forupdate = true;
             return $this->save();

@@ -30,7 +30,7 @@
         //PADRAO NOVO COM RETORNO DE UM OBJETO DO TIPO INSTANCIADO
         public static function findOne($filter)
         {
-            $query = new MongoQuery($filter);            
+            $query = new MongoQuery($filter);
             $instance = self::newInstanceToCallClass();
             $cursor = $instance->connection->executeQuery($instance->name_db.'.'.$instance->collection, $query);
             $objects = $instance->cursorToObject($cursor);
