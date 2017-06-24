@@ -9,11 +9,8 @@
     ],
     "require": {
          "php": ">=7.0.0",
-        "uphp/inflection": "^1.0"         
+         "uphp/inflection": "^0.0.1"         
     },
-    "require-dev": {
-        "phpunit/phpunit": "6.1.*"
-    },    
     "autoload": {
         "psr-4": {
             "UPhp\\Model\\": "src/"
