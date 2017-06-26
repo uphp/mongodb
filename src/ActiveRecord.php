@@ -41,6 +41,23 @@
             throw new Exception("Property $name cannot be set");
         }
 
+        public function __call($func, $params){
+            
+            $db_dump = json_decode(file_get_contents("db/db_dump.json"), true);
+            $config = require("config/database.php");
+            
+            $class_name = get_called_class();
+            $class_name = explode("\\", $class_name)[1];
+            $class_name = Inflection::pluralize($class_name);
+
+            if (in_array($func, $db_dump[$config["dbname"]][$class_name])) {
+                return new ActiveRecordViewResult(Inflection::singularize($class_name), $func, $this->$func);
+            } else {
+                throw new \Exception("PRECISO TRATAR ESSE ERRO AINDA"); 
+            }
+
+        }
+
         public static function executeCommand($commandStr){
             $connectionInfo = require("config/database.php");            
             $connect = new MongoManager('mongodb://'.$connectionInfo["server"].':'.$connectionInfo["port"]) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
