@@ -1,11 +1,18 @@
 <?php
-    namespace src\traits;
+    namespace UPhp\Model\Traits;
 
     use MongoDB\Driver\Query as MongoQuery;
 
+    /**
+     * Trait com métodos privados para o MongoDB
+     * @package UPhp\Model\Traits
+     */
     trait ActiveRecordPrivateMethods{
 
-        /* RETORNA AS PROPRIEDADES(ATRIBUTOS) DE UMA CLASSE, SE $ALL FOR VERDADEIRO, É INCLUSO AS PROPRIEDADES DA CLASSE PAI */
+        /**
+         * Retorna todos os atributos declarados em uma classe
+         * @param bool $all Se TRUE, esse método retorna os atributos da classe pai também.
+         */
         private function getClassVars($all = FALSE)
         {
             if($all){
@@ -18,7 +25,11 @@
             }
             return $retu;
         }
-        /* CONVERTE UM OBJETO PARA ARRAY */
+
+        /**
+         * Transforma o objeto passado em array
+         * Retorna um array com chave e valor análogo ao objeto
+         */
         private  function objectToArray()
         {
             $collection_values = [];
@@ -29,7 +40,12 @@
             }
             return $collection_values;
         }
-        /* ADICIONA AO OBJETO INSTANCIADO OS VALORES DO ARRAY RETORNADO */
+
+        /**
+         * Transforma um array de chave e valor em propriedades do objeto
+         * Retorna o objeto populado com os valores do array
+         * @param $array array Recebe um array com chave e valor a ser populado ao objeto
+         */
         private function addArrayToObject($array)
         {
             foreach($array as $key => $value){
@@ -71,7 +87,8 @@
             $this->updated_at = date('Y-m-d H:i:s');
         }
         //ADICIONA O TIMESTAMPS DELETED_AT
-        private function addTimeStampsDelete(){
+        private function addTimeStampsDelete()
+        {
             $this->deleted_at = date("Y-m-d H:i:s");
         }
         // RETORNA UMA INSTANCIA DO OBJETO DO TIPO DA CLASSE CHAMADA
