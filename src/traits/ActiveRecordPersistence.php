@@ -1,11 +1,14 @@
 <?php
     namespace UPhp\Model\Traits;
 
-    use MongoDB\Driver\Query as MongoQuery;
+    use models\Condominio;
+
+    //use MongoDB\Driver\Query as MongoQuery;
     use MongoDB\Driver\BulkWrite as MongoBulkWrite;
-    use MongoDB\Driver\Manager as MongoManager;
+    //use MongoDB\Driver\Manager as MongoManager;
     use MongoDB\BSON\ObjectId as MongoId;
     use src\Inflection as Inflection;
+    use UPhp\ActiveRecordValidation\Validate;
 
     /**
      * Trait para manipulação dos dados do banco
@@ -52,15 +55,19 @@
          */
         public function save()
         {
-            if($this->forupdate){
-                return $this->update();
-            }else{
-                $bulk = new MongoBulkWrite();
-                $this->addTimeStamps();
-                $objArray = $this->objectToArray();
-                $mongo_id = $bulk->insert($objArray);
-                $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
-                return $this->findOneReturn([$this->pk_field => $mongo_id], TRUE);
+            if (Validate::required(models/Condominio::validate["required"])) {
+                if ($this->forupdate) {
+                    return $this->update();
+                } else {
+                    $bulk = new MongoBulkWrite();
+                    $this->addTimeStamps();
+                    $objArray = $this->objectToArray();
+                    $mongo_id = $bulk->insert($objArray);
+                    $this->connection->executeBulkWrite($this->name_db . '.' . $this->collection, $bulk);
+                    return $this->findOneReturn([$this->pk_field => $mongo_id], TRUE);
+                }
+            } else {
+                throw new \Exception("Campos em branco");
             }
         }
 
