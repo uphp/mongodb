@@ -5,8 +5,6 @@
     use MongoDB\Driver\Manager as MongoManager;
     use MongoDB\Driver\Command as MongoCommand;
     use src\Inflection;
-    use UPhp\ActiveRecordValidation\Validate;
-
     /**
      * Classe de manipulação de dados, aqui estão definidos os métodos mágicos
      * @package UPhp\Model

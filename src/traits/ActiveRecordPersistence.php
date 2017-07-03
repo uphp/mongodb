@@ -1,14 +1,14 @@
 <?php
     namespace UPhp\Model\Traits;
 
-    use models\Condominio;
+    //require("vendor/uphp/active-record-validation/src/Validate.php");
 
     //use MongoDB\Driver\Query as MongoQuery;
     use MongoDB\Driver\BulkWrite as MongoBulkWrite;
     //use MongoDB\Driver\Manager as MongoManager;
     use MongoDB\BSON\ObjectId as MongoId;
     use src\Inflection as Inflection;
-    use UPhp\ActiveRecordValidation\Validate;
+    use UPhp\ActiveRecordValidation\Validate as Validate;
 
     /**
      * Trait para manipulação dos dados do banco
@@ -48,6 +48,10 @@
          * @var null Guarda o momento exato que o objeto foi deletado do banco
          */
         protected $deleted_at = NULL;
+        /**
+         * @var null Armazenador das mensagens de erros das validações
+         */
+        private $errors = NULL;
 
         /**
          * O método save() persiste os dados do objeto na coleção setada, caso a propriedade $forupdate seja true, ao invés de salvar um novo objeto, será atualizado.
@@ -55,7 +59,7 @@
          */
         public function save()
         {
-            if (Validate::required(models/Condominio::validate["required"])) {
+            if (Validate::required($this)) {
                 if ($this->forupdate) {
                     return $this->update();
                 } else {
