@@ -30,6 +30,10 @@
          * Trait contendo os métodos de busca do banco
          */
         use Traits\ActiveRecordFinderMethods;
+        /**
+         * Trait contendo os métodos para validação dos dados
+         */
+        use Traits\ActiveRecordValidation;
 
         /**
          * Recebe um array com chave e valor que serão convertidos em objeto do tipo chamado passando as propriedades(array_keys) os valores(array_values) do array.

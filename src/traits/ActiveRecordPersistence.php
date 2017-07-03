@@ -1,14 +1,10 @@
 <?php
     namespace UPhp\Model\Traits;
 
-    //require("vendor/uphp/active-record-validation/src/Validate.php");
-
-    //use MongoDB\Driver\Query as MongoQuery;
     use MongoDB\Driver\BulkWrite as MongoBulkWrite;
-    //use MongoDB\Driver\Manager as MongoManager;
     use MongoDB\BSON\ObjectId as MongoId;
     use src\Inflection as Inflection;
-    use UPhp\ActiveRecordValidation\Validate as Validate;
+
 
     /**
      * Trait para manipulação dos dados do banco
@@ -49,9 +45,9 @@
          */
         protected $deleted_at = NULL;
         /**
-         * @var null Armazenador das mensagens de erros das validações
+         * @var array Armazenador das mensagens de erros das validações
          */
-        private $errors = NULL;
+        public $errors = [];
 
         /**
          * O método save() persiste os dados do objeto na coleção setada, caso a propriedade $forupdate seja true, ao invés de salvar um novo objeto, será atualizado.
@@ -59,7 +55,7 @@
          */
         public function save()
         {
-            if (Validate::required($this)) {
+            if ($this->isValid()) {
                 if ($this->forupdate) {
                     return $this->update();
                 } else {
@@ -71,7 +67,8 @@
                     return $this->findOneReturn([$this->pk_field => $mongo_id], TRUE);
                 }
             } else {
-                throw new \Exception("Campos em branco");
+                //throw new \Exception($this->errors[0]["field"] . $this->errors[0]["message"]);
+                return $this;
             }
         }
 
