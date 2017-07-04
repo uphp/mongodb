@@ -23,6 +23,16 @@
                 $array_attr = array_diff($obj_array, $database_array);
                 $retu = array_merge($array_attr, ["created_at", "updated_at", "deleted_at"]);
             }
+
+            if (in_array("validate", $retu)) {
+                foreach ($retu as $i => $value) {
+                    if ($value == "validate") {
+                        unset($retu[$i]);
+                        break;
+                    }
+                }
+            }
+
             return $retu;
         }
 
@@ -33,8 +43,8 @@
         private  function objectToArray()
         {
             $collection_values = [];
-            foreach($this->getClassVars() as $field){
-                if($this->$field != NULL){
+            foreach ($this->getClassVars() as $field) {
+                if ($this->$field != NULL) {
                     $collection_values[$field] = $this->$field;
                 }
             }
@@ -60,6 +70,7 @@
             $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
             $this->addArrayToObject((array)$cursor->toArray()[0]);
             $this->forupdate = $forUpdate;
+            unset($this->validate);
             return $this;
         }
         //TRANSFORMA UM CURSOR DO MONGO EM UM OBJETO DO TIPO INSTANCIADO
@@ -69,8 +80,10 @@
             foreach($cursor->toArray() as $item){
                 $new_obj = self::newInstanceToCallClass();
                 foreach($item as $prop_key => $prop_value){
+                    if ($prop_key == "validate") continue;
                     $new_obj->$prop_key = $item->$prop_key;
                 }
+                unset($new_obj->validate);
                 array_push($object_list, $new_obj);
             }
             return $object_list;

@@ -85,7 +85,7 @@
          */
         public function __call($func, $params){
             
-            $db_dump = json_decode(file_get_contents("db/db_dump.json"), true);
+            $db_dump = json_decode(file_get_contents("db/db_dump.lock"), true);
             $config = require("config/database.php");
             
             $class_name = get_called_class();
@@ -95,7 +95,7 @@
             if (in_array($func, $db_dump[$config["dbname"]][$class_name])) {
                 return new ActiveRecordViewResult(Inflection::singularize($class_name), $func, $this->$func);
             } else {
-                throw new \Exception("PRECISO TRATAR ESSE ERRO AINDA"); 
+                throw new \Exception("PRECISO TRATAR ESSE ERRO AINDA EM __call EM Database.php ;;; METODO: " . $func);
             }
 
         }

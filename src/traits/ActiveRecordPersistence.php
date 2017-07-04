@@ -78,12 +78,16 @@
          */
         public function update()
         {
-            $bulk = new MongoBulkWrite();
-            $this->updateTimeStamps();
-            $objArray = $this->objectToArray();
-            $bulk->update([$this->pk_field => $this->_id], $objArray);
-            $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
-            return $this;
+            if ($this->isValid()) {
+                $bulk = new MongoBulkWrite();
+                $this->updateTimeStamps();
+                $objArray = $this->objectToArray();
+                $bulk->update([$this->pk_field => $this->_id], $objArray);
+                $this->connection->executeBulkWrite($this->name_db . '.' . $this->collection, $bulk);
+                return $this;
+            } else {
+                return $this;
+            }
         }
 
         /**
@@ -94,7 +98,7 @@
         {
             $bulk = new MongoBulkWrite();
             $bulk->delete([$this->pk_field => $this->_id]);
-            $this->connection->executeBulkWrite($this->name_db.'.'.$this->collection, $bulk);
+            $this->connection->executeBulkWrite($this->name_db . '.' . $this->collection, $bulk);
             return $this;
         }
 
