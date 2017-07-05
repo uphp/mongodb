@@ -27,18 +27,9 @@ trait ActiveRecordValidation{
             $validateFunctions = array_keys($this->validate);
             foreach ($validateFunctions as $vFunction) {
                 if ($vFunction == "required") {
-                    if ($this->required()) {
-                        $validated = $validated && true;
-                    } else {
-                        $validated = $validated && false;
-                    }
-
+                    $validated = $validated && $this->required();
                 } elseif ($vFunction == "uniqueness") {
-                    if ($this->uniqueness()) {
-                        $validated = $validated && true;
-                    } else {
-                        $validated = $validated && false;
-                    }
+                    $validated = $validated && $this->uniqueness();
                 } else {
                     $validated = $validated && $this->$vFunction();
                 }
@@ -73,7 +64,7 @@ trait ActiveRecordValidation{
                 }
 
                 $this->errors[] = [$field => $msg];
-
+                $validated = $validated && false;
             } else {
                 $validated = $validated && true;
             }
@@ -94,6 +85,9 @@ trait ActiveRecordValidation{
             } else {
                 $filter = [$field => $this->$field];
             }
+            if ($this->forupdate) {
+                $filter = $filter + ["where" => "this._id != " . $this->_id];
+            }
             $obj = self::findOne($filter);
             if ($obj != false) {
                 $config = $this->getClassNameLang();
@@ -102,6 +96,7 @@ trait ActiveRecordValidation{
                     $msg = $field . " already exists";
                 }
                 $this->errors[] = [$field => $msg];
+                $validated = $validated && false;
             } else {
                 $validated = $validated && true;
             }

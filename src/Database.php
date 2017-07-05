@@ -47,7 +47,7 @@
             $instance_class = get_called_class();
             $classArray = explode("\\",$instance_class);
             $className = end($classArray);
-            $this->collection = Inflection::pluralize($className);
+            $this->collection = Inflection::pluralize(Inflection::tableize($className));
 
             $this->addArrayToObject($object_array);
         }
@@ -90,10 +90,10 @@
             
             $class_name = get_called_class();
             $class_name = explode("\\", $class_name)[1];
-            $class_name = Inflection::pluralize($class_name);
+            $class_name = Inflection::classify(Inflection::pluralize(Inflection::tableize($class_name)));
 
             if (in_array($func, $db_dump[$config["dbname"]][$class_name])) {
-                return new ActiveRecordViewResult(Inflection::singularize($class_name), $func, $this->$func);
+                return new ActiveRecordViewResult(Inflection::classify(Inflection::singularize(Inflection::tableize($class_name))), $func, $this->$func);
             } else {
                 throw new \Exception("PRECISO TRATAR ESSE ERRO AINDA EM __call EM Database.php ;;; METODO: " . $func);
             }

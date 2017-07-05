@@ -54,7 +54,7 @@
         {
             $query = new MongoQuery($filter);
             $instance = self::newInstanceToCallClass();
-            $cursor = $instance->connection->executeQuery($instance->name_db.'.'.$instance->collection, $query);
+            $cursor = $instance->connection->executeQuery($instance->name_db. '.' .$instance->collection, $query);
             $objects = $instance->cursorToObject($cursor);
             if(count($objects) > 0)
             {

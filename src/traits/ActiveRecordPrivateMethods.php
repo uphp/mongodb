@@ -70,7 +70,7 @@
             $cursor = $this->connection->executeQuery($this->name_db.'.'.$this->collection, $query);
             $this->addArrayToObject((array)$cursor->toArray()[0]);
             $this->forupdate = $forUpdate;
-            unset($this->validate);
+            //unset($this->validate);
             return $this;
         }
         //TRANSFORMA UM CURSOR DO MONGO EM UM OBJETO DO TIPO INSTANCIADO
@@ -83,7 +83,7 @@
                     if ($prop_key == "validate") continue;
                     $new_obj->$prop_key = $item->$prop_key;
                 }
-                unset($new_obj->validate);
+                //unset($new_obj->validate);
                 array_push($object_list, $new_obj);
             }
             return $object_list;
