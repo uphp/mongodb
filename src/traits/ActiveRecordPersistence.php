@@ -18,7 +18,7 @@
         /**
          * @var bool Variável de controle que habilita o objeto para edição
          */
-        private $forupdate  = FALSE;
+        private $forupdate  = false;
         /**
          * @var null Recebe o nome da coleção na qual o objeto trabalha
          */

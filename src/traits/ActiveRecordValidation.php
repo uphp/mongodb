@@ -21,23 +21,24 @@ trait ActiveRecordValidation{
      * Função para verificação das validações
      * @return bool
      */
-    protected function isValid(){
+    protected function isValid()
+    {
         $validated = true;
         if (isset($this->validate)) {
             $validateFunctions = array_keys($this->validate);
             foreach ($validateFunctions as $vFunction) {
                 if ($vFunction == "required") {
-                    $validated = $validated && $this->required();
+                    $required = $this->required();
+                    $validated = $validated && $required;
                 } elseif ($vFunction == "uniqueness") {
-                    $validated = $validated && $this->uniqueness();
+                    $uniqueness = $this->uniqueness();
+                    $validated = $validated && $uniqueness;
                 } else {
                     $validated = $validated && $this->$vFunction();
                 }
             }
         }
-        if (empty($this->errors)) {
-            unset($this->errors);
-        }
+        if (empty($this->errors)) unset($this->errors);
         return $validated;
     }
 
@@ -72,7 +73,8 @@ trait ActiveRecordValidation{
         return $validated;
     }
 
-    private function uniqueness(){
+    private function uniqueness()
+    {
         $validated = true;
         foreach ($this->validate["uniqueness"] as $field) {
             $field = explode("|", str_replace(" ", "", $field));
@@ -86,7 +88,7 @@ trait ActiveRecordValidation{
                 $filter = [$field => $this->$field];
             }
             if ($this->forupdate) {
-                $filter = $filter + ["where" => "this._id != " . $this->_id];
+                $filter = $filter + ["where" => "_id != " . $this->_id];
             }
             $obj = self::findOne($filter);
             if ($obj != false) {
@@ -104,7 +106,8 @@ trait ActiveRecordValidation{
         return $validated;
     }
 
-    private function getClassNameLang(){
+    private function getClassNameLang()
+    {
         $className = get_class($this);
         $className = explode("\\", $className)[1];
         $lang = require("config/application.php");
