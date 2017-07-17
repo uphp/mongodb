@@ -59,7 +59,7 @@ trait ActiveRecordValidation{
                 $lang = require("config/application.php");
                 $lang = $lang["lang"];
 
-                $msg = Label::getValidateLanguage($className, "required", $lang, $field);
+                $msg = Label::get($className, $lang, "validate")["required"][$field];
                 if (empty($msg)) {
                     $msg = $field . " is required";
                 }
@@ -93,7 +93,7 @@ trait ActiveRecordValidation{
             $obj = self::findOne($filter);
             if ($obj != false) {
                 $config = $this->getClassNameLang();
-                $msg = Label::getValidateLanguage($config["className"], "uniqueness", $config["lang"], $field);
+                $msg = Label::get($config["className"], $config["lang"], "validate")["uniqueness"][$field];
                 if (empty($msg)) {
                     $msg = $field . " already exists";
                 }

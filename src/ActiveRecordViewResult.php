@@ -42,7 +42,7 @@
         public function label(){
             $lang = require("config/application.php");
             $lang = $lang["lang"];
-            $labels = Label::getLanguage($this->class, $lang);
+            $labels = Label::get($this->class, $lang, "db");
             return $labels[$this->function];
         }
 
