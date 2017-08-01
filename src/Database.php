@@ -1,6 +1,12 @@
 <?php
     namespace UPhp\Model;
 
+    require("traits/ActiveRecordConnection.php");
+    require("traits/ActiveRecordPrivateMethods.php");
+    require("traits/ActiveRecordPersistence.php");
+    require("traits/ActiveRecordFinderMethods.php");
+    require("traits/ActiveRecordValidation.php");
+
     use Exception;
     use MongoDB\Driver\Manager as MongoManager;
     use MongoDB\Driver\Command as MongoCommand;
