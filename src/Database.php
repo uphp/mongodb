@@ -113,7 +113,7 @@
          */
         public static function executeCommand($commandStr){
             $connectionInfo = require("config/database.php");            
-            $connect = new MongoManager('mongodb://'.$connectionInfo["server"].':'.$connectionInfo["port"]) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
+            $connect = new MongoManager('mongodb://' . $connectionInfo["user_db"] . ':' . $connectionInfo["pass_db"] . '@' . $connectionInfo["server_addr"]. ':' .$connectionInfo["port"] . "/" . $connectionInfo["dbname"]) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
             $command = new MongoCommand($commandStr);
             $connect->executeCommand($connectionInfo["dbname"], $command);
         }

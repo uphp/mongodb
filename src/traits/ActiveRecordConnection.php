@@ -39,7 +39,7 @@
          */
         public function connectMongo()
         {
-            $this->connection = new MongoManager('mongodb://'.$this->server_addr.':'.$this->port) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
+            $this->connection = new MongoManager('mongodb://' . $this->user_db . ':' . $this->pass_db . '@' . $this->server_addr. ':' .$this->port . "/" . $this->name_db) or die(trataerro(__FILE__, __FUNCTION__, "Não foi possível se conectar ao MongoDB."));
         }
 
         /**
