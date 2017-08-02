@@ -58,6 +58,7 @@
             $objects = $instance->cursorToObject($cursor);
             if(count($objects) > 0)
             {
+                $objects[0]->forupdate = true;
                 return $objects[0];
             }else{
                 return false;
